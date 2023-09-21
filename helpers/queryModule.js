@@ -23,12 +23,12 @@ module.exports = {
             return error
         }
     },
-    readDb: async(tb_name, cols, whereCond) => {
+    readDb: async(tb_name, cols, whereCond, orderBy = false) => {
         try {
             console.log(whereCond);
             let q = `SELECT ${cols} FROM ${tb_name} WHERE deleted_at IS NULL`
             if (whereCond) q += ` AND ${whereCond}`
-            console.log(q);
+            if (orderBy) q += orderBy
             return cmdMultipleQuery(q)
                 .then(result => {
                     console.log(result);

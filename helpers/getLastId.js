@@ -1,7 +1,8 @@
 const query = require("./queryModule");
 
 async function getLastId(table, col_nm) {
-    return await query.readDb(table, col_nm, ` ORDER BY ${col_nm} DESC LIMIT 1`)
+    let q = `SELECT ${col_nm} FROM ${table} ORDER BY ${col_nm} DESC LIMIT 1`
+    return await query.customDb(q)
         .then((result) => {
             console.log(result);
             if (result.length === 0) return 0
