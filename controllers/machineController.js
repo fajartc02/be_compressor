@@ -2,7 +2,7 @@ const response = require('../helpers/response')
 const query = require('../helpers/queryModule')
 const uuidToId = require('../helpers/UUIDtoID')
     // const idToUUID = require('../helpers/idToUUID')
-const { tb_m_machines, tb_m_lines } = require('../config/table')
+const { tb_m_machines, tb_m_lines, v_mc_params } = require('../config/table')
 const getLastId = require('../helpers/getLastId')
 
 
@@ -27,8 +27,9 @@ module.exports = {
             if (id) {
                 whereCond += `machine_id = ${await uuidToId(tb_m_machines, 'machine_id', id)}`
             }
-
-            let resp = await query.readDb(tb_m_machines, 'uuid,machine_nm', whereCond)
+            let q = `SELECT uuid as mc_param_id , machine_id, line_nm, machine_nm, x_axis, y_axis, tag_name, reg_value FROM v_mc_params`
+            let resp = await query.customDb(q)
+                // let resp = await query.readDb(tb_m_machines, 'uuid,machine_nm', whereCond)
             if (resp) response.success(res, 'success read machine', resp)
         } catch (error) {
             console.log(error);
