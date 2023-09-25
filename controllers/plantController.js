@@ -11,7 +11,7 @@ module.exports = {
         try {
             req.body.plant_id = await getLastId(tb_m_plants, 'plant_id')
             req.body.uuid = req.uuid
-            req.body.background = req.file.path
+            req.body.background = 'uploads/' + req.file.path.split('uploads')[1]
             req.body.company_id = await uuidToId(tb_m_companies, 'company_id', req.body.company_id)
             req.body.created_by = req.user.user_nm
             let resp = await query.insertDb(tb_m_plants, req.body)
@@ -39,7 +39,8 @@ module.exports = {
     updateDB: async(req, res) => {
         try {
             console.log(req.file);
-            if (req.file) req.body.background = req.file.path
+            // if (req.file) req.body.background = req.file.path
+            if (req.file) req.body.background = 'uploads/' + req.file.path.split('uploads')[1]
             let { id } = req.params
             let whereCond = ''
             if (id) whereCond += `plant_id = ${await uuidToId(tb_m_plants, 'plant_id', id)}`
