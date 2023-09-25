@@ -29,7 +29,7 @@ module.exports = {
                 whereCond += `plant_id = ${await uuidToId(tb_m_plants, 'plant_id', id)}`
             }
 
-            let resp = await query.readDb(tb_m_plants, 'uuid,plant_nm', whereCond)
+            let resp = await query.readDb(tb_m_plants, 'uuid,plant_nm,background', whereCond)
             if (resp) response.success(res, 'success read plant', resp)
         } catch (error) {
             console.log(error);
