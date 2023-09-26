@@ -14,7 +14,7 @@ module.exports = {
             let q = `INSERT INTO ${tb_name} (${containerCols.join(',')}) VALUES (${containerVals.join(',')})`
             return cmdMultipleQuery(q)
                 .then(result => {
-                    console.log(result);
+                    // console.log(result);
                     return true
                 })
 
@@ -29,9 +29,10 @@ module.exports = {
             let q = `SELECT ${cols} FROM ${tb_name} WHERE deleted_at IS NULL`
             if (whereCond) q += ` AND ${whereCond}`
             if (orderBy) q += orderBy
+            console.log(q);
             return cmdMultipleQuery(q)
                 .then(result => {
-                    console.log(result);
+                    // console.log(result);
                     return result
                 })
         } catch (error) {
