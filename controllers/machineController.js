@@ -13,6 +13,7 @@ module.exports = {
             req.body.uuid = req.uuid
             req.body.line_id = await uuidToId(tb_m_lines, 'line_id', req.body.line_id)
             req.body.created_by = req.user.user_nm
+                // Condition for add param_id to mc_params [id, id]
             let resp = await query.insertDb(tb_m_machines, req.body)
             if (resp) response.success(res, 'success add machine')
         } catch (error) {
@@ -24,8 +25,8 @@ module.exports = {
         try {
             let { id, line_id } = req.query
             let whereCond = []
-            if (id) whereCond.push(`machine_id = ${await uuidToId(tb_m_machines, 'machine_id', id)}`)
-            if (line_id) whereCond.push(`line_id = ${await uuidToId(tb_m_lines, 'line_id', line_id)}`)
+            if (id) whereCond.push(`machine_id = '${id}'`)
+            if (line_id) whereCond.push(`line_id = '${line_id}'`)
 
             if (whereCond.length > 0) whereCond.join(' AND ')
             let q = `SELECT uuid as mc_param_id , machine_id,line_id, line_nm, machine_nm, x_axis, y_axis, tag_name, reg_value FROM v_mc_params ${whereCond.length > 0 ? 'WHERE ' + whereCond : ''}`

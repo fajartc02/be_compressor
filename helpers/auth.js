@@ -42,5 +42,13 @@ module.exports = {
         } catch (error) {
             response.notAllowed(res, 'Token Is Invalid');
         }
+    },
+    isAdmin: async(req, res, next) => {
+        console.log("i'm admin");
+        if (req.user.is_admin === 1) {
+            next()
+        } else {
+            response.notAllowed(res, 'Only admin can do this action');
+        }
     }
 }
