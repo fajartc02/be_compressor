@@ -16,8 +16,8 @@ module.exports = {
             const { machine_id } = req.params
             let raw_status = await query.readDb(v_mc_params, 'reg_value,deleted_at,dev_name, group_name, tag_name', `machine_id = '${machine_id}'`)
             let comp_status = await raw_status[0]
-
-            if (comp_status.reg_value) return response.error(res, 'Compressor is currently ON')
+            console.log(comp_status);
+            if (+comp_status.reg_value) return response.error(res, 'Compressor is currently ON')
             let objIot = {
                 dev_name: `${comp_status.dev_name}.${comp_status.group_name}`,
                 reg_name: comp_status.tag_name,
@@ -45,7 +45,7 @@ module.exports = {
             let raw_status = await query.readDb(v_mc_params, 'reg_value,deleted_at,dev_name, group_name, tag_name', `machine_id = '${machine_id}'`)
             let comp_status = await raw_status[0]
 
-            if (!comp_status.reg_value) return response.error(res, 'Compressor is currently OFF')
+            if (+comp_status.reg_value === 0) return response.error(res, 'Compressor is currently OFF')
             let objIot = {
                 dev_name: `${comp_status.dev_name}.${comp_status.group_name}`,
                 reg_name: comp_status.tag_name,
