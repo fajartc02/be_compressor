@@ -49,7 +49,7 @@ module.exports = {
             let objIot = {
                 dev_name: `${comp_status.dev_name}.${comp_status.group_name}`,
                 reg_name: comp_status.tag_name,
-                reg_value: 1,
+                reg_value: 0,
                 ttl: 1
             }
             let resp = await query.insertDb(t_transmit, objIot)
