@@ -30,9 +30,10 @@ function cmdMultipleQuery(sql) {
                 resolve(result);
                 // connection.destroy()
                 // connection.release()
+                pool.releaseConnection(connection);
             });
-            // pool.releaseConnection(connection);
         });
+        // pool.releaseConnection()
     });
 }
 
