@@ -49,10 +49,11 @@ module.exports = {
     },
     readDB: async(req, res) => {
         try {
-            let { id, line_id } = req.query
+            let { id, line_id, plant_id } = req.query
             let whereCond = []
             if (id) whereCond.push(`machine_id = '${id}'`)
             if (line_id) whereCond.push(`line_id = '${line_id}'`)
+            if (plant_id) whereCond.push(`plant_id = '${plant_id}'`)
             if (whereCond.length > 0) whereCond.join(' AND ')
             let q = `SELECT uuid as mc_param_id , machine_id,line_id, line_nm, machine_nm, x_axis, y_axis, tag_name, reg_value FROM v_mc_params ${whereCond.length > 0 ? 'WHERE ' + whereCond : ''}`
             console.log(q);
