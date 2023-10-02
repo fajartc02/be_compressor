@@ -29,6 +29,7 @@ module.exports = {
             req.body.plant_id = await getLastId(tb_m_plants, 'plant_id')
             req.body.uuid = req.uuid
             req.body.background = 'uploads/' + req.file.path.split('uploads')[1]
+            console.log(req.file);
             req.body.company_id = await uuidToId(tb_m_companies, 'company_id', req.body.company_id)
             req.body.created_by = req.user.user_nm
             let resp = await query.insertDb(tb_m_plants, req.body)
