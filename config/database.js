@@ -12,7 +12,7 @@ function cmdMultipleQuery(sql) {
         queueLimit: 0,
         waitForConnections: true,
         timezone: 'Z',
-        // connectionLimit: 10,
+        connectionLimit: 99,
         // timezone: 'utc',
         connectTimeout: 60000
     });
