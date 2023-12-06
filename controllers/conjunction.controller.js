@@ -10,7 +10,7 @@ const { v4 } = require('uuid')
 module.exports = {
     readDb: async(req, res) => {
         try {
-            let resp = await query.readDb(tb_m_conjuntions, ['uuid as conjunction_id', 'conjunction_nm', 'conjunction_desc'])
+            let resp = await query.readDb(tb_m_conjuntions, ['uuid as conjuntion_id', 'conjunction_nm', 'conjunction_desc'])
             response.success(res, 'Success to get conjunctions', resp)
         } catch (error) {
             console.error(error)
