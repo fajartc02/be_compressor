@@ -11,7 +11,8 @@ const table = {
     tb_m_formulas: 'tb_m_formulas',
     t_transmit: 't_transmit',
     tb_r_mc_locations: 'tb_r_mc_locations',
-    v_mc_params: 'v_mc_params'
+    v_mc_params: 'v_mc_params',
+    v_mc_param_status: 'v_mc_param_status'
 }
 
 module.exports = table
