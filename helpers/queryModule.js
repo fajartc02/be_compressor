@@ -23,6 +23,43 @@ module.exports = {
             return error
         }
     },
+    insertBulkDb: async(tb_name, colsVals) => {
+        try {
+            let containerColumn = []
+            let containerValues = []
+            let mapBulkData = await colsVals.map(item => {
+                containerValues = []
+                for (const key in item) {
+                    if (key != 'childs') {
+                        if (item[key]) {
+                            console.log();
+                            if (typeof item[key] == 'object') {
+                                containerValues.push(`'{${item[key].join(',')}}'`)
+                            } else {
+                                containerValues.push(`'${item[key]}'`)
+                            }
+                        } else {
+                            containerValues.push(`NULL`)
+                        }
+                    }
+                }
+                return `(${containerValues.join(',')})`
+            })
+            for (const key in colsVals[0]) {
+                containerColumn.push(key)
+            }
+            let q = `INSERT INTO ${tb_name} (${containerColumn.join(',')}) VALUES ${mapBulkData.join(',')}`
+            return cmdMultipleQuery(q)
+                .then(result => {
+                    // console.log(result);
+                    return true
+                })
+
+        } catch (error) {
+            console.log(error);
+            return error
+        }
+    },
     readDb: async(tb_name, cols, whereCond, orderBy = false) => {
         try {
             console.log(whereCond);
@@ -96,7 +133,6 @@ module.exports = {
         try {
             return cmdMultipleQuery(q)
                 .then(result => {
-                    console.log(result);
                     return result
                 })
         } catch (error) {
