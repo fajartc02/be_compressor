@@ -20,9 +20,9 @@ app.use('/api/v1', indexRouter);
 
 var cron = require('node-cron');
 
-// cron.schedule('*/5 * * * * *', async() => {
-//     console.log('running a task every 5 seconds');
-//     schedulerAutonomusCheck()
-// });
+cron.schedule('*/5 * * * * *', async() => {
+    console.log('running a task every 5 seconds');
+    schedulerAutonomusCheck()
+});
 
 module.exports = app;
