@@ -9,6 +9,7 @@ const table = {
     tb_m_operators: 'tb_m_operators',
     tb_m_conjuntions: 'tb_m_conjuntions',
     tb_m_formulas: 'tb_m_formulas',
+    tb_m_main_formula: 'tb_m_main_formula',
     t_transmit: 't_transmit',
     tb_r_mc_locations: 'tb_r_mc_locations',
     v_mc_params: 'v_mc_params',

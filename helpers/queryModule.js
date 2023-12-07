@@ -15,7 +15,7 @@ module.exports = {
             return cmdMultipleQuery(q)
                 .then(result => {
                     // console.log(result);
-                    return true
+                    return result
                 })
 
         } catch (error) {
