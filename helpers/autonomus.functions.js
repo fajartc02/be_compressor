@@ -67,7 +67,7 @@ async function schedulerAutonomusCheck() {
                 Action:
                 INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())
             */
-            const scriptTxt = `${itm.children[0].reg_value } ${itm.children[0].operator_nm} ${itm.children[0].limit_vals} ${itm.children[0].conjunction_nm} ${itm.children[1].reg_value} ${itm.children[1].operator_nm} ${itm.children[1].limit_vals}`
+            const scriptTxt = `${ itm.children[0].reg_value.replace(',', '.') } ${itm.children[0].operator_nm} ${itm.children[0].limit_vals} ${itm.children[0].conjunction_nm} ${itm.children[1].reg_value.replace(',', '.')} ${itm.children[1].operator_nm} ${itm.children[1].limit_vals}`
             console.log(scriptTxt);
             console.log(eval(scriptTxt));
             if (eval(scriptTxt)) {
@@ -79,7 +79,7 @@ async function schedulerAutonomusCheck() {
                 console.log(`INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())`);
             }
         } else {
-            const scriptTxt2 = `${itm.children[0].reg_value } ${itm.children[0].operator_nm} ${itm.children[0].limit_vals}`
+            const scriptTxt2 = `${itm.children[0].reg_value.replace(',', '.') } ${itm.children[0].operator_nm} ${itm.children[0].limit_vals}`
             console.log(scriptTxt2);
             console.log(eval(scriptTxt2));
             if (eval(scriptTxt2)) {
