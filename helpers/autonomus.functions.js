@@ -34,13 +34,15 @@ async function schedulerAutonomusCheck() {
     let containerGroup = []
     for (let i = 0; i < resp.length; i++) {
         const item = resp[i];
-        let machineAvail = containerGroup.find(child => child.machine_nm === item.machine_nm)
+        let machineAvail = containerGroup.find(child => child.main_formula_id === item.main_formula_id)
         if (!machineAvail) {
             item.children = []
             item.children.push(JSON.parse(JSON.stringify(item)))
                 // item.no = i + 1
             const obj = {
                 no: i + 1,
+                main_formula_id: item.main_formula_id,
+                formula_nm: item.formula_nm,
                 machine_nm: item.machine_nm,
                 children: item.children
             }
