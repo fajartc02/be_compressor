@@ -12,7 +12,7 @@ module.exports = {
         try {
             let resp = await query.customDb(`
                 SELECT 
-                    ROW_NUMBER() OVER(PARTITION BY client_hdl) as no,
+                    ROW_NUMBER() OVER(PARTITION BY formula_nm) as no,
                     tmmf.main_formula_id,
                     tmmf.formula_nm,
                     tmf.uuid as formula_id,
