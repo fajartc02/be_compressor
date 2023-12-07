@@ -1,7 +1,10 @@
 async function schedulerAutonomusCheck() {
     const query = require('./queryModule')
     let resp = await query.customDb(`
-            SELECT 
+            SELECT
+                ROW_NUMBER() OVER(PARTITION BY formula_nm) as no,
+                tmmf.main_formula_id,
+                tmmf.formula_nm,
                 tmf.uuid as formula_id,
                 tmf.param_out_state,
                 tmf.param_out_id,
@@ -23,7 +26,8 @@ async function schedulerAutonomusCheck() {
                 tmcon.uuid as conjuntion_id,
                 tmcon.conjunction_nm,
                 tmcon.conjunction_desc
-            FROM tb_m_formulas tmf
+            FROM tb_m_main_formula tmmf
+            JOIN tb_m_formulas tmf ON tmmf.main_formula_id = tmf.main_formula_id
             JOIN tb_m_machines tmmc ON tmmc.machine_id = tmf.machine_id
             JOIN tb_m_parameters tmp ON tmp.client_hdl = tmf.param_id
             JOIN tb_m_operators tmop ON tmop.operator_id = tmf.operator_id
@@ -54,6 +58,7 @@ async function schedulerAutonomusCheck() {
     }
     for (let idx = 0; idx < containerGroup.length; idx++) {
         const itm = containerGroup[idx];
+        console.log(itm);
         if (itm.children.length > 1) {
             /* 
                 itm.children[0].reg_value 

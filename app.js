@@ -20,8 +20,8 @@ app.use('/api/v1', indexRouter);
 
 var cron = require('node-cron');
 
-cron.schedule('*/1 * * * *', async() => {
-    console.log('running a task every 60 seconds');
+cron.schedule('*/30 * * * * *', async() => {
+    console.log('running a task every 30 seconds');
     schedulerAutonomusCheck()
 });
 
