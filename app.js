@@ -19,10 +19,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1', indexRouter);
 
 var cron = require('node-cron');
+const calculateParamsUpdate = require("./helpers/calculateParams.functions");
 
 cron.schedule('*/30 * * * * *', async() => {
-    console.log('running a task every 30 seconds');
+    console.log('running a task check values actual every 30 seconds');
     schedulerAutonomusCheck()
+});
+
+cron.schedule('*/15 * * * * *', async() => {
+    console.log('running a task calculate parameters every 15 seconds');
+    calculateParamsUpdate([`'FLOW_DC_6'`, `'FLOW_DC_7'`, `'FLOW_DC_8'`, `'FLOW_DC_9'`], 27)
+    calculateParamsUpdate([`'FLOW_LP_1'`, `'FLOW_LP_2'`, `'FLOW_LP_3'`, `'FLOW_LP_4'`, `'FLOW_LP_5'`], 34)
 });
 
 module.exports = app;

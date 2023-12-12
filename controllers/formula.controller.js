@@ -35,7 +35,8 @@ module.exports = {
                     tmop.operator_desc,
                     tmcon.uuid as conjuntion_id,
                     tmcon.conjunction_nm,
-                    tmcon.conjunction_desc
+                    tmcon.conjunction_desc,
+                    tmmf.is_active
                 FROM tb_m_main_formula tmmf
                 JOIN tb_m_formulas tmf ON tmmf.main_formula_id = tmf.main_formula_id
                 JOIN tb_m_machines tmmc ON tmmc.machine_id = tmf.machine_id
@@ -43,7 +44,7 @@ module.exports = {
                 JOIN tb_m_operators tmop ON tmop.operator_id = tmf.operator_id
                 LEFT JOIN tb_m_conjuntions tmcon ON tmcon.conjuntion_id = tmf.conjuntion_id
                 LEFT JOIN tb_m_parameters tmpar ON tmpar.client_hdl = tmf.param_out_id
-                ORDER BY conjunction_nm DESC
+                ORDER BY tmmf.created_at ASC
             `)
             console.log(resp);
             let containerGroup = []
@@ -59,6 +60,7 @@ module.exports = {
                         main_formula_id: item.main_formula_id,
                         formula_nm: item.formula_nm, 
                         machine_nm: item.machine_nm,
+                        is_active: item.is_active,
                         children: item.children
                     }
                     containerGroup.push(obj)

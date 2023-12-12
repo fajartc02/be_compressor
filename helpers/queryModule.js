@@ -84,10 +84,10 @@ module.exports = {
             for (const key in colsVals) {
                 containerSets.push(`${key} = '${colsVals[key]}'`)
             }
-            if (req) {
-                containerSets.push(`modified_at = CURRENT_TIMESTAMP()`)
-                containerSets.push(`modified_by = ${req.user.user_nm}`)
-            }
+            // if (req) {
+            //     containerSets.push(`modified_at = CURRENT_TIMESTAMP()`)
+            //     containerSets.push(`modified_by = ${req.user.user_nm}`)
+            // }
 
             let q = `UPDATE ${tb_name} SET ${containerSets.join(',')} WHERE`
             if (whereCond) q += ` ${whereCond}`
