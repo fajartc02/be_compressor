@@ -60,7 +60,7 @@ module.exports = {
                         main_formula_id: item.main_formula_id,
                         formula_nm: item.formula_nm, 
                         machine_nm: item.machine_nm,
-                        is_active: item.is_active,
+                        is_active: item.is_active ? true : false,
                         children: item.children
                     }
                     containerGroup.push(obj)
