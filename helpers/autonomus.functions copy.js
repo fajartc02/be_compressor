@@ -1,8 +1,6 @@
-async function checkTransmit(db, dev_name, reg_name, reg_value) {
-    const response = await db.customDb(`SELECT * FROM t_transmit WHERE dev_name = '${dev_name}' AND reg_name = '${reg_name}' AND reg_value = '${reg_value}'`)
-    return response.length === 0
+async function checkActualParameter(out_param_id, command) {
+    
 }
-
 async function schedulerAutonomusCheck() {
     const query = require('./queryModule')
     let resp = await query.customDb(`
@@ -71,60 +69,47 @@ async function schedulerAutonomusCheck() {
     for (let idx = 0; idx < containerGroup.length; idx++) {
         const itm = containerGroup[idx];
         console.log(itm, 'ITEM')
-        const isCommandON = itm.children[0].param_out_state == '1'
-        const isCommandOFF = itm.children[0].param_out_state == '0'
-        const currentOutDeviceOFF = itm.children[0].out_regval == '0'
-        const currentOutDeviceON = itm.children[0].out_regval == '1'
-        if (itm.children.length > 1) { // CONDITION STATEMENT FOR 2 JUDGMENT PARAMETERS
-            
+        if (itm.children.length > 1) {
+            /* 
+                itm.children[0].reg_value 
+                itm.children[0].operator_nm 
+                itm.children[0].limit_vals 
+
+                itm.children[0].conjunction_nm 
+
+                itm.children[1].reg_value
+                itm.children[1].operator_nm
+                itm.children[1].limit_vals
+                
+                Action:
+                INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())
+            */
             const scriptTxt = `${ itm.children[0].reg_value.replace(',', '.') } ${itm.children[0].operator_nm} ${itm.children[0].limit_vals} ${itm.children[0].conjunction_nm} ${itm.children[1].reg_value.replace(',', '.')} ${itm.children[1].operator_nm} ${itm.children[1].limit_vals}`
-            console.log(scriptTxt);
+            // console.log(scriptTxt);
+            // console.log(eval(scriptTxt));
             if (eval(scriptTxt)) {
                 let sqlQ = `
                     INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())
                     ;
                     INSERT INTO tb_r_formula_log(msg, formula, action) VALUES ('success', '${scriptTxt}', 'SET ${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}.${itm.children[1].out_tag} = ${itm.children[1].param_out_state}')`
-                let isTransmitAllow = checkTransmit(query, 
-                    `${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}`,
-                    itm.children[1].out_tag,
-                    itm.children[1].param_out_state
-                )
-                if(isCommandON && currentOutDeviceOFF && isTransmitAllow) {
-                    // if(isTransmitAllow) {
-                        await query.customDb(sqlQ)
-                        console.log(`INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())`);
-                    // }
-                } else if(isCommandOFF && currentOutDeviceON && isTransmitAllow) {
-                    await query.customDb(sqlQ)
-                    console.log(`INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())`);
-                }
                 // await query.customDb(sqlQ)
+                // console.log(`INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())`);
             }
-        } else { // CONDITION STATEMENT FOR 1 PARAMETER
+        } else {
             const scriptTxt2 = `${itm.children[0].reg_value.replace(',', '.') } ${itm.children[0].operator_nm} ${itm.children[0].limit_vals}`
-            console.log(scriptTxt2);
+            // console.log(scriptTxt2);
+            // console.log(eval(scriptTxt2));
             if (eval(scriptTxt2)) {
-                let isTransmitAllow = checkTransmit(query, 
-                    `${itm.children[0].out_devnm}.${itm.children[0].out_grpnm}`,
-                    itm.children[0].out_tag,
-                    itm.children[0].param_out_state
-                )
                 let sqlQ2 = `
                     INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[0].out_devnm}.${itm.children[0].out_grpnm}', '${itm.children[0].out_tag}', '${itm.children[0].param_out_state}', '1', NOW())
                     ;
                     INSERT INTO tb_r_formula_log(msg, formula, action) VALUES ('success', '${scriptTxt2}', 'SET ${itm.children[0].out_devnm}.${itm.children[0].out_grpnm}.${itm.children[0].out_tag} = ${itm.children[0].param_out_state}')`
-                    if(isCommandON && currentOutDeviceOFF && isTransmitAllow) {
-                        await query.customDb(sqlQ2)
-                        // console.log(`INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())`);
-                    } else if(isCommandOFF && currentOutDeviceON) {
-                        await query.customDb(sqlQ2)
-                        // console.log(`INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[1].out_devnm}.${itm.children[1].out_grpnm}', '${itm.children[1].out_tag}', '${itm.children[1].param_out_state}', '1', NOW())`);
-                    }
-                // await query.customDb(sqlQ2)
+                await query.customDb(sqlQ2)
                 // console.log(`INSERT INTO t_transmit(dev_name, reg_name, reg_value, ttl, tr_time) VALUES ('${itm.children[0].out_devnm}.${itm.children[0].out_grpnm}', '${itm.children[0].out_tag}', '${itm.children[0].param_out_state}', '1', NOW())`);
             }
         }
     }
+    // console.log(containerGroup);
     return containerGroup
 }
 

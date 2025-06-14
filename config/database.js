@@ -1,7 +1,7 @@
-function cmdMultipleQuery(sql) {
+async function cmdMultipleQuery(sql) {
     const mysql = require('mysql2')
     require('dotenv').config()
-    var pool = mysql.createPool({
+    var pool = await mysql.createPool({
         // connectionLimit: 100, // default = 10
         host: process.env.HOST_DB_NEW,
         user: process.env.USER_DB_NEW,
@@ -16,25 +16,31 @@ function cmdMultipleQuery(sql) {
         // timezone: 'utc',
         connectTimeout: 60000
     });
-    return new Promise((resolve, reject) => {
-        pool.getConnection(function(err, connection) {
-            if (err) {
-                console.log(err);
-                reject(err);
-            }
-            connection.query(sql, function(err, result) {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                }
-                resolve(result);
-                // connection.destroy()
-                // connection.release()
-                pool.releaseConnection(connection);
-            });
-        });
-        // pool.releaseConnection()
-    });
+    
+    const poolPromise = pool.promise();
+
+    const [rows, fields] = await poolPromise.query(sql)
+    await poolPromise.end()
+    return rows
+    // return new Promise((resolve, reject) => {
+    //     pool.getConnection(function(err, connection) {
+    //         if (err) {
+    //             console.log(err);
+    //             reject(err);
+    //         }
+    //         connection.query(sql, function(err, result) {
+    //             if (err) {
+    //                 console.log(err);
+    //                 reject(err);
+    //             }
+    //             resolve(result);
+    //             // connection.destroy()
+    //             // connection.release()
+    //             pool.releaseConnection(connection);
+    //         });
+    //     });
+    //     // pool.releaseConnection()
+    // });
 }
 
 
