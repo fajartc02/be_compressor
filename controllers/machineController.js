@@ -1,14 +1,14 @@
 const response = require('../helpers/response')
 const query = require('../helpers/queryModule')
 const uuidToId = require('../helpers/UUIDtoID')
-    // const idToUUID = require('../helpers/idToUUID')
+// const idToUUID = require('../helpers/idToUUID')
 const { tb_m_machines, tb_m_lines, tb_m_mc_parameters } = require('../config/table')
 const getLastId = require('../helpers/getLastId')
 const { v4 } = require('uuid')
 
 
 module.exports = {
-    insertDB: async(req, res) => {
+    insertDB: async (req, res) => {
         try {
             const { param_ids } = req.body
             req.body.machine_id = await getLastId(tb_m_machines, 'machine_id')
@@ -47,7 +47,7 @@ module.exports = {
             response.failed(res, 'Error add machine')
         }
     },
-    readDB: async(req, res) => {
+    readDB: async (req, res) => {
         try {
             let { id, line_id, plant_id } = req.query
             let whereCond = []
@@ -56,17 +56,17 @@ module.exports = {
             if (plant_id) whereCond.push(`plant_id = '${plant_id}'`)
             // whereCond.push(`tag_name = 'STATUS`)
             if (whereCond.length > 0) whereCond.join(' AND ')
-            let q = `SELECT uuid as mc_param_id , machine_id,line_id, line_nm, machine_nm, x_axis, y_axis, tag_name, reg_value as status FROM v_mc_param_status ${whereCond.length > 0 ? 'WHERE ' + whereCond : ''} ORDER BY tag_name ASC`
+            let q = `SELECT uuid as mc_param_id , machine_id,line_id, line_nm, machine_nm, x_axis, y_axis, tag_name, reg_value as status, is_formula_active FROM v_mc_param_status ${whereCond.length > 0 ? 'WHERE ' + whereCond : ''} ORDER BY tag_name ASC`
             console.log(q);
             let resp = await query.customDb(q)
-                // let resp = await query.readDb(tb_m_machines, 'uuid,machine_nm', whereCond)
+            // let resp = await query.readDb(tb_m_machines, 'uuid,machine_nm', whereCond)
             if (resp) response.success(res, 'success read machine', resp)
         } catch (error) {
             console.log(error);
             response.failed(res, 'Error read machine')
         }
     },
-    updateDB: async(req, res) => {
+    updateDB: async (req, res) => {
         try {
             let { id } = req.params
             let whereCond = ''
@@ -79,7 +79,7 @@ module.exports = {
             response.failed(res, 'Error update machine')
         }
     },
-    softDeleteDB: async(req, res) => {
+    softDeleteDB: async (req, res) => {
         try {
             let { id } = req.params
             let whereCond = ''

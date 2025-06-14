@@ -8,7 +8,7 @@ const { v4 } = require('uuid')
 
 
 module.exports = {
-    readDb: async(req, res) => {
+    readDb: async (req, res) => {
         try {
             let resp = await query.customDb(`
                 SELECT 
@@ -54,11 +54,11 @@ module.exports = {
                 if (!machineAvail) {
                     item.children = []
                     item.children.push(JSON.parse(JSON.stringify(item)))
-                        // item.no = i + 1
+                    // item.no = i + 1
                     const obj = {
                         no: i + 1,
                         main_formula_id: item.main_formula_id,
-                        formula_nm: item.formula_nm, 
+                        formula_nm: item.formula_nm,
                         machine_nm: item.machine_nm,
                         is_active: item.is_active ? true : false,
                         children: item.children
@@ -75,10 +75,10 @@ module.exports = {
             response.error(res, 'Failed to get formulas')
         }
     },
-    insertDb: async(req, res) => {
+    insertDb: async (req, res) => {
         try {
             let { formula_nm, containerFormulas } = req.body
-            const formulaRes = await query.insertDb(tb_m_main_formula, {formula_nm})
+            const formulaRes = await query.insertDb(tb_m_main_formula, { formula_nm })
             const main_formula_id = formulaRes.insertId
             let convFormula = await containerFormulas.map(async item => {
                 item.machine_id ? item.machine_id = await uuidToId(tb_m_machines, 'machine_id', item.machine_id.machine_id) : item.machine_id = null
@@ -97,12 +97,24 @@ module.exports = {
                 }
             })
             let waitConvFormula = await Promise.all(convFormula)
-                // console.log(waitConvFormula);
+            // console.log(waitConvFormula);
             const respInst = await query.insertBulkDb(tb_m_formulas, waitConvFormula)
             response.success(res, 'Success to insert formula', respInst)
         } catch (error) {
             console.error(error)
             response.error(res, 'Failed to insert formulas')
+        }
+    },
+    updateDb: async (req, res) => {
+        try {
+            let { uid } = req.params
+            let whereCond = ''
+            if (uid) whereCond += `uuid = '${uid}'`
+            let resp = await query.updateDb(tb_m_formulas, req.body, whereCond)
+            if (resp) response.success(res, 'success update formula')
+        } catch (error) {
+            console.log(error);
+            response.failed(res, 'Error update formula')
         }
     }
 }
