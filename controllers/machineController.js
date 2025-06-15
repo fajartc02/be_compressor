@@ -56,7 +56,7 @@ module.exports = {
             if (plant_id) whereCond.push(`plant_id = '${plant_id}'`)
             // whereCond.push(`tag_name = 'STATUS`)
             if (whereCond.length > 0) whereCond.join(' AND ')
-            let q = `SELECT uuid as mc_param_id , machine_id,line_id, line_nm, machine_nm, x_axis, y_axis, tag_name, reg_value as status, is_formula_active FROM v_mc_param_status ${whereCond.length > 0 ? 'WHERE ' + whereCond : ''} ORDER BY tag_name ASC`
+            let q = `SELECT uuid as mc_param_id , machine_id,line_id, line_nm, machine_nm, x_axis, y_axis, tag_name, reg_value as status, is_formula_active, is_remote FROM v_mc_param_status ${whereCond.length > 0 ? 'WHERE ' + whereCond : ''} ORDER BY tag_name ASC`
             console.log(q);
             let resp = await query.customDb(q)
             // let resp = await query.readDb(tb_m_machines, 'uuid,machine_nm', whereCond)
