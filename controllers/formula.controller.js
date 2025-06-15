@@ -44,7 +44,7 @@ module.exports = {
                 JOIN tb_m_operators tmop ON tmop.operator_id = tmf.operator_id
                 LEFT JOIN tb_m_conjuntions tmcon ON tmcon.conjuntion_id = tmf.conjuntion_id
                 LEFT JOIN tb_m_parameters tmpar ON tmpar.client_hdl = tmf.param_out_id
-                ORDER BY tmmf.created_at ASC
+                ORDER BY tmmf.main_formula_id ASC
             `)
             console.log(resp);
             let containerGroup = []
